@@ -14,6 +14,7 @@ func Login(loginParams *LoginParams) *entity.User {
 
 	log.Println(loginParams)
 
+
 	user := &entity.User{
         USR_Username:      loginParams.USR_Username,
         USR_Password:      loginParams.USR_Password,
