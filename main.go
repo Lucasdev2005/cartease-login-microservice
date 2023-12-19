@@ -2,13 +2,13 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	// "cartease-login-microservice/controller"
+	"cartease-login-microservice/controller"
 )
 
 func main() {
 	g := gin.Default()
 
-	var requestBody map[string]interface{}
+	var requestBody *controller.LoginParams
 
 	g.POST("/", func(ctx *gin.Context) {
 		if err := ctx.BindJSON(&requestBody); err != nil {
@@ -16,8 +16,8 @@ func main() {
 			return
 		}
 	
-		// ctx.JSON(200, controller.Login())
-		ctx.JSON(200, requestBody)
+		ctx.JSON(200, controller.Login(requestBody))
+		// ctx.JSON(200, requestBody)
 	})
 
 	g.Run(":3000")
