@@ -1,8 +1,8 @@
 package Controller
 
 import (
+	"cartease-login-microservice/Core"
 	"cartease-login-microservice/Entity"
-	"log"
 )
 
 type LoginParams struct {
@@ -10,19 +10,8 @@ type LoginParams struct {
 	USR_Password string
 }
 
-func Login(loginParams *LoginParams) *Entity.User {
+func Login(request *Core.Request) (interface{}, error) {
 
-	log.Println(loginParams)
-
-	user := &Entity.User{
-		USR_Username:     loginParams.USR_Username,
-		USR_Password:     loginParams.USR_Password,
-		USR_Neighborhood: "neighborhood",
-		USR_CEP:          "cep",
-		USR_City:         "city",
-		USR_UF:           "uf",
-		USR_Complement:   "complement",
-	}
-
-	return user
+	user := &Entity.User{}
+	return user, nil
 }
