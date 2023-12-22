@@ -7,20 +7,27 @@ import (
 )
 
 type Request struct {
-	Body   interface{}
-	Params []interface{}
+	Body   map[string]interface{}
+	Params map[string]interface{}
 }
 
 func makeRequest(ctx *gin.Context) *Request {
+	var bodyJSON map[string]interface{}
+	params := make(map[string]interface{})
 
-	var body interface{}
-	body = ctx.BindJSON(&body)
+	if err := ctx.ShouldBindJSON(&bodyJSON); err != nil {
+		log.Println("Erro ao vincular JSON:", err.Error())
+	}
 
-	log.Println(ctx.Param("id"))
+	for _, param := range ctx.Params {
+		if param.Key != "" {
+			params[param.Key] = param.Value
+		}
+	}
 
 	return &Request{
-		Body:   body,
-		Params: nil,
+		Body:   bodyJSON,
+		Params: params,
 	}
 }
 
