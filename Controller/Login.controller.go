@@ -19,5 +19,5 @@ func Login(request *Core.Request) (interface{}, error) {
 }
 
 func CreateAccount(request *Core.Request) (interface{}, error) {
-	return nil, nil
+	return Core.Query("SELECT * FROM users")
 }

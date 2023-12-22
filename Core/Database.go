@@ -3,22 +3,29 @@ package Core
 import (
 	"database/sql"
 	"log"
+
+	_ "github.com/lib/pq"
 )
 
-var DatabaseConection *sql.DB
+var DatabaseConnection *sql.DB
 
-func Main() {
-	conStr := "user=pqgotest dbname=pqgotest sslmode=verify-full"
+func init() {
+	conStr := "user=cartease dbname=db password=cartease@123 host=localhost port=5432 sslmode=disable"
 	db, err := sql.Open("postgres", conStr)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	DatabaseConection = db
+	err = db.Ping()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	DatabaseConnection = db
 }
 
-func Query(qry *string) (*sql.Rows, error) {
-	queryExecuted, err := DatabaseConection.Query(*qry)
+func Query(qry string) (*sql.Rows, error) {
+	queryExecuted, err := DatabaseConnection.Query(qry)
 	return queryExecuted, err
 }

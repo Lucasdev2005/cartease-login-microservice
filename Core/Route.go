@@ -67,8 +67,8 @@ func RoutePath(g *gin.Engine, fn func(request *Request) (interface{}, error)) {
 	})
 }
 
-func RouteGet(g *gin.Engine, fn func(request *Request) (interface{}, error)) {
-	g.PUT("/", func(ctx *gin.Context) {
+func RouteGet(g *gin.Engine, url string, fn func(request *Request) (interface{}, error)) {
+	g.GET(url, func(ctx *gin.Context) {
 		req := makeRequest(ctx)
 		result, err := fn(req)
 		if err != nil {
