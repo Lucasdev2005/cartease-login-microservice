@@ -11,6 +11,8 @@ func main() {
 	g := gin.Default()
 
 	Core.RoutePost(g, "user/:id", Controller.Login)
+	Core.RoutePost(g, "createAccount", Controller.CreateAccount)
 
 	g.Run(":3000")
+	defer Core.DatabaseConection.Close()
 }
