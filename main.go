@@ -8,6 +8,8 @@ import (
 )
 
 func main() {
+	// if err := godotenv.Load(); err != nil{
+	// }
 	g := gin.Default()
 
 	apiRoutes := []Core.Route{
