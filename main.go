@@ -10,7 +10,13 @@ import (
 func main() {
 	g := gin.Default()
 
-	Core.RoutePost(g, "user/:id", Controller.Login)
-
+	apiRoutes := []Core.Route{
+		{
+			RouteMethod: Core.RoutePost,
+			Url:         "user/:id",
+			Action:      Controller.Login,
+		},
+	}
+	Core.RouteGroup("api", g, apiRoutes)
 	g.Run(":3000")
 }

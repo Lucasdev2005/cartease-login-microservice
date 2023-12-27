@@ -10,8 +10,9 @@ type LoginParams struct {
 	USR_Password string
 }
 
-func Login(request *Core.Request) (interface{}, error) {
+func Login(request Core.Request) (interface{}, *Core.Error) {
+	user := Entity.User{}
+	var err *Core.Error
 
-	user := &Entity.User{}
-	return user, nil
+	return user, err
 }
