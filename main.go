@@ -19,4 +19,5 @@ func main() {
 	}
 	Core.RouteGroup("api", g, apiRoutes)
 	g.Run(":3000")
+	defer Core.DatabaseConnection.Close()
 }

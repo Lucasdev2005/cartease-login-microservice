@@ -16,3 +16,7 @@ func Login(request Core.Request) (interface{}, *Core.Error) {
 
 	return user, err
 }
+
+func CreateAccount(request *Core.Request) (interface{}, error) {
+	return Core.Query("SELECT * FROM users")
+}
