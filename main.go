@@ -2,23 +2,28 @@ package main
 
 import (
 	"cartease-login-microservice/Controller"
-	"cartease-login-microservice/Core"
+	Route "cartease-login-microservice/Core/Route"
+	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	// if err := godotenv.Load(); err != nil{
-	// }
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error on load enviroment")
+	}
+
 	g := gin.Default()
 
-	apiRoutes := []Core.Route{
+	apiRoutes := []Route.Route{
 		{
-			RouteMethod: Core.RoutePost,
+			RouteMethod: Route.RoutePost,
 			Url:         "user/:id",
 			Action:      Controller.Login,
 		},
 	}
-	Core.RouteGroup("api", g, apiRoutes)
-	g.Run(":3000")
+	Route.RouteGroup("api", g, apiRoutes)
+	g.Run(":" + os.Getenv("PORT"))
 }

@@ -1,25 +1,10 @@
-package Core
+package Route
 
 import (
+	HttpstatusSuccess "cartease-login-microservice/Core/HttpStatus/success"
+
 	"github.com/gin-gonic/gin"
 )
-
-type Request struct {
-	Body          interface{}
-	GetParam      func(key string) string
-	GetQueryParam func(key string) string
-}
-
-type Error struct {
-	ErrorCode int
-	Message   string
-}
-
-type Route struct {
-	RouteMethod func(g *gin.Engine, url string, fn func(request Request) (interface{}, *Error))
-	Url         string
-	Action      func(request Request) (interface{}, *Error)
-}
 
 func makeRequest(ctx *gin.Context) Request {
 
@@ -36,6 +21,7 @@ func makeRequest(ctx *gin.Context) Request {
 		Body:          body,
 		GetParam:      ctx.Param,
 		GetQueryParam: ctx.Query,
+		GetHeader:     ctx.Request.Header.Get,
 	}
 }
 
@@ -44,7 +30,7 @@ func RoutePost(g *gin.Engine, url string, fn func(request Request) (interface{},
 		request := makeRequest(ctx)
 		result, err := fn(request)
 		if err == nil {
-			ctx.JSON(200, result)
+			ctx.JSON(HttpstatusSuccess.OK, result)
 			return
 		}
 
@@ -70,7 +56,7 @@ func RoutePath(g *gin.Engine, url string, fn func(request Request) (interface{},
 		request := makeRequest(ctx)
 		result, err := fn(request)
 		if err == nil {
-			ctx.JSON(200, result)
+			ctx.JSON(HttpstatusSuccess.OK, result)
 			return
 		}
 
@@ -83,7 +69,7 @@ func RouteGet(g *gin.Engine, url string, fn func(request Request) (interface{}, 
 		request := makeRequest(ctx)
 		result, err := fn(request)
 		if err == nil {
-			ctx.JSON(200, result)
+			ctx.JSON(HttpstatusSuccess.OK, result)
 			return
 		}
 
@@ -96,7 +82,7 @@ func RouteDelete(g *gin.Engine, url string, fn func(request Request) (interface{
 		request := makeRequest(ctx)
 		result, err := fn(request)
 		if err == nil {
-			ctx.JSON(200, result)
+			ctx.JSON(HttpstatusSuccess.OK, result)
 			return
 		}
 

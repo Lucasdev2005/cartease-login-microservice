@@ -1,7 +1,7 @@
 package Controller
 
 import (
-	"cartease-login-microservice/Core"
+	"cartease-login-microservice/Core/Route"
 	"cartease-login-microservice/Entity"
 )
 
@@ -10,9 +10,9 @@ type LoginParams struct {
 	USR_Password string
 }
 
-func Login(request Core.Request) (interface{}, *Core.Error) {
+func Login(request Route.Request) (interface{}, *Route.Error) {
 	user := Entity.User{}
-	var err *Core.Error
+	var err *Route.Error
 
 	return user, err
 }
