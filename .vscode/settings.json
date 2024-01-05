@@ -3,6 +3,9 @@
         "controller": "controller",
         "entity": "class",
         "guard": "guard",
-        "Route": "routes"
+        "Route": "routes",
+    },
+    "material-icon-theme.files.associations": {
+        "main.go": "go_gopher" 
     }
 }

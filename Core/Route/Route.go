@@ -110,11 +110,9 @@ func processRequest(
 ) {
 	request := makeRequest(context)
 
-	if success, err := verifyMiddleware(request, middleWare); success {
-		if !success {
-			context.JSON(err.ErrorCode, err.Message)
-			return
-		}
+	if success, err := verifyMiddleware(request, middleWare); !success {
+		context.JSON(err.ErrorCode, err.Message)
+		return
 	}
 
 	result, err := fn(request)
