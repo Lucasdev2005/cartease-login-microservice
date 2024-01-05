@@ -24,6 +24,6 @@ func main() {
 			Action:      Controller.Login,
 		},
 	}
-	Route.RouteGroup("api", g, apiRoutes)
+	Route.RouteGroup("api", g, apiRoutes, nil)
 	g.Run(":" + os.Getenv("PORT"))
 }

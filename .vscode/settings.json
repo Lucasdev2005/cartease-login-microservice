@@ -1,0 +1,8 @@
+{
+    "material-icon-theme.folders.associations": {
+        "controller": "controller",
+        "entity": "class",
+        "guard": "guard",
+        "Route": "routes"
+    }
+}

@@ -1,6 +1,7 @@
 package Route
 
 import (
+	HttpClientError "cartease-login-microservice/Core/HttpStatus/clientError"
 	HttpstatusSuccess "cartease-login-microservice/Core/HttpStatus/success"
 
 	"github.com/gin-gonic/gin"
@@ -25,76 +26,102 @@ func makeRequest(ctx *gin.Context) Request {
 	}
 }
 
-func RoutePost(g *gin.Engine, url string, fn func(request Request) (interface{}, *Error)) {
+func RoutePost(
+	g *gin.Engine,
+	url string,
+	fn func(request Request) (interface{}, *Error),
+	middleWare func(req Request) bool,
+) {
 	g.POST(url, func(ctx *gin.Context) {
-		request := makeRequest(ctx)
-		result, err := fn(request)
-		if err == nil {
-			ctx.JSON(HttpstatusSuccess.OK, result)
-			return
-		}
-
-		ctx.JSON(err.ErrorCode, err.Message)
+		processRequest(ctx, middleWare, fn)
 	})
 }
 
-func RoutePut(g *gin.Engine, url string, fn func(request Request) (interface{}, *Error)) {
+func RoutePut(
+	g *gin.Engine, url string,
+	fn func(request Request) (interface{}, *Error),
+	middleWare func(req Request) bool,
+) {
 	g.PUT(url, func(ctx *gin.Context) {
-		request := makeRequest(ctx)
-		result, err := fn(request)
-		if err == nil {
-			ctx.JSON(200, result)
-			return
-		}
-
-		ctx.JSON(err.ErrorCode, err.Message)
+		processRequest(ctx, middleWare, fn)
 	})
 }
 
-func RoutePath(g *gin.Engine, url string, fn func(request Request) (interface{}, *Error)) {
+func RoutePath(
+	g *gin.Engine, url string,
+	fn func(request Request) (interface{}, *Error),
+	middleWare func(req Request) bool,
+) {
 	g.PATCH(url, func(ctx *gin.Context) {
-		request := makeRequest(ctx)
-		result, err := fn(request)
-		if err == nil {
-			ctx.JSON(HttpstatusSuccess.OK, result)
-			return
-		}
-
-		ctx.JSON(err.ErrorCode, err.Message)
+		processRequest(ctx, middleWare, fn)
 	})
 }
 
-func RouteGet(g *gin.Engine, url string, fn func(request Request) (interface{}, *Error)) {
+func RouteGet(
+	g *gin.Engine,
+	url string,
+	fn func(request Request) (interface{}, *Error),
+	middleWare func(req Request) bool,
+) {
 	g.GET(url, func(ctx *gin.Context) {
-		request := makeRequest(ctx)
-		result, err := fn(request)
-		if err == nil {
-			ctx.JSON(HttpstatusSuccess.OK, result)
-			return
-		}
-
-		ctx.JSON(err.ErrorCode, err.Message)
+		processRequest(ctx, middleWare, fn)
 	})
 }
 
-func RouteDelete(g *gin.Engine, url string, fn func(request Request) (interface{}, *Error)) {
+func RouteDelete(
+	g *gin.Engine,
+	url string,
+	fn func(request Request) (interface{}, *Error),
+	middleWare func(req Request) bool,
+) {
 	g.DELETE(url, func(ctx *gin.Context) {
-		request := makeRequest(ctx)
-		result, err := fn(request)
-		if err == nil {
-			ctx.JSON(HttpstatusSuccess.OK, result)
-			return
-		}
-
-		ctx.JSON(err.ErrorCode, err.Message)
+		processRequest(ctx, middleWare, fn)
 	})
 }
 
 func RouteGroup(
 	prefix string,
 	g *gin.Engine,
-	routes []Route) {
+	routes []Route,
+	middleWare func(req Request) bool,
+) {
 	for _, route := range routes {
-		route.RouteMethod(g, prefix+"/"+route.Url, route.Action)
+		route.RouteMethod(g, prefix+"/"+route.Url, route.Action, middleWare)
+	}
+}
+
+func verifyMiddleware(req Request, mw func(req Request) bool) (bool, Error) {
+
+	if mw != nil {
+		success := mw(req)
+		return success, Error{
+			ErrorCode: HttpClientError.Unauthorized,
+			Message:   HttpClientError.GetStatusName(HttpClientError.Unauthorized),
+		}
+	}
+
+	return true, Error{}
+}
+
+func processRequest(
+	context *gin.Context,
+	middleWare func(req Request) bool,
+	fn func(request Request) (interface{}, *Error),
+) {
+	request := makeRequest(context)
+
+	if success, err := verifyMiddleware(request, middleWare); success {
+		if !success {
+			context.JSON(err.ErrorCode, err.Message)
+			return
+		}
+	}
+
+	result, err := fn(request)
+
+	if err == nil {
+		context.JSON(HttpstatusSuccess.OK, result)
+	} else {
+		context.JSON(err.ErrorCode, err.Message)
 	}
 }
